@@ -1,0 +1,1216 @@
+JAVA PROFILE 1.0.1, created Tue Jun 16 20:22:49 2020
+
+Copyright (c) 2003, 2005, Oracle and/or its affiliates. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+  - Neither the name of Oracle nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+Header for -agentlib:hprof (or -Xrunhprof) ASCII Output (JDK 5.0 JVMTI based)
+
+WARNING!  This file format is under development, and is subject to
+change without notice.
+
+This file contains the following types of records:
+
+THREAD START
+THREAD END      mark the lifetime of Java threads
+
+TRACE           represents a Java stack trace.  Each trace consists
+                of a series of stack frames.  Other records refer to
+                TRACEs to identify (1) where object allocations have
+                taken place, (2) the frames in which GC roots were
+                found, and (3) frequently executed methods.
+
+HEAP DUMP       is a complete snapshot of all live objects in the Java
+                heap.  Following distinctions are made:
+
+                ROOT    root set as determined by GC
+                CLS     classes 
+                OBJ     instances
+                ARR     arrays
+
+SITES           is a sorted list of allocation sites.  This identifies
+                the most heavily allocated object types, and the TRACE
+                at which those allocations occurred.
+
+CPU SAMPLES     is a statistical profile of program execution.  The VM
+                periodically samples all running threads, and assigns
+                a quantum to active TRACEs in those threads.  Entries
+                in this record are TRACEs ranked by the percentage of
+                total quanta they consumed; top-ranked TRACEs are
+                typically hot spots in the program.
+
+CPU TIME        is a profile of program execution obtained by measuring
+                the time spent in individual methods (excluding the time
+                spent in callees), as well as by counting the number of
+                times each method is called. Entries in this record are
+                TRACEs ranked by the percentage of total CPU time. The
+                "count" field indicates the number of times each TRACE 
+                is invoked.
+
+MONITOR TIME    is a profile of monitor contention obtained by measuring
+                the time spent by a thread waiting to enter a monitor.
+                Entries in this record are TRACEs ranked by the percentage
+                of total monitor contention time and a brief description
+                of the monitor.  The "count" field indicates the number of 
+                times the monitor was contended at that TRACE.
+
+MONITOR DUMP    is a complete snapshot of all the monitors and threads in 
+                the System.
+
+HEAP DUMP, SITES, CPU SAMPLES|TIME and MONITOR DUMP|TIME records are generated 
+at program exit.  They can also be obtained during program execution by typing 
+Ctrl-\ (on Solaris) or by typing Ctrl-Break (on Win32).
+
+--------
+
+THREAD START (obj=5000018d, id = 200001, name="main", group="main")
+THREAD END (id = 200001)
+THREAD START (obj=5000018d, id = 200004, name="DestroyJavaVM", group="main")
+THREAD START (obj=5000026c, id = 200005, name="Thread-0", group="main")
+THREAD END (id = 200005)
+THREAD END (id = 200004)
+TRACE 300253:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:50)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:87)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300257:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:50)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:90)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300219:
+	bp.common.ds.SuffixTree.rescan(SuffixTree.java:350)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:151)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+TRACE 300231:
+	bp.common.ds.SuffixTree.getChild(SuffixTree.java:286)
+	bp.common.ds.SuffixTree.rescan(SuffixTree.java:346)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:151)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+TRACE 300246:
+	bp.trawler.TrawlerTools.parseCounts(TrawlerTools.java:126)
+	bp.trawler.TrawlerTools.parseCounts(TrawlerTools.java:125)
+	bp.trawler.TrawlerTools.parseCounts(TrawlerTools.java:125)
+	bp.trawler.TrawlerTools.parseCounts(TrawlerTools.java:125)
+TRACE 300215:
+	bp.common.ds.SuffixTree.getChild(SuffixTree.java:286)
+	bp.common.ds.SuffixTree.scanPrefix(SuffixTree.java:369)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:119)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+TRACE 300229:
+	bp.common.ds.SuffixTree.scanPrefix(SuffixTree.java:382)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:119)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+TRACE 300258:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300222:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:119)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300285:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:119)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.main(Trawler.java:439)
+TRACE 300281:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:101)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.main(Trawler.java:439)
+TRACE 300224:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:101)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300223:
+	bp.common.ds.SuffixTree.setSibling(SuffixTree.java:443)
+	bp.common.ds.SuffixTree.setNthChild(SuffixTree.java:427)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:101)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+TRACE 300243:
+	bp.trawler.TrawlerTools.parseCounts(TrawlerTools.java:125)
+	bp.trawler.TrawlerTools.parseCounts(TrawlerTools.java:125)
+	bp.trawler.TrawlerTools.parseCounts(TrawlerTools.java:125)
+	bp.trawler.TrawlerTools.parseCounts(TrawlerTools.java:125)
+TRACE 300237:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:159)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300283:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:159)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.main(Trawler.java:439)
+TRACE 300235:
+	bp.common.ds.SuffixTree.getChild(SuffixTree.java:286)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:100)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+TRACE 300227:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:105)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300232:
+	bp.common.ds.SuffixTree.setSibling(SuffixTree.java:443)
+	bp.common.ds.SuffixTree.setNthChild(SuffixTree.java:427)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:136)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+TRACE 300267:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:87)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300236:
+	bp.common.ds.SuffixTree.scanPrefix(SuffixTree.java:371)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:119)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+TRACE 300286:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:151)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.main(Trawler.java:439)
+TRACE 300157:
+	bp.common.io.FastaParser_Generator_Int.readFile(FastaParser_Generator_Int.java:95)
+	bp.trawler.Alphabet.readInString(Alphabet.java:109)
+	bp.trawler.Trawler.main(Trawler.java:379)
+TRACE 300226:
+	bp.common.ds.SuffixTree.setSibling(SuffixTree.java:443)
+	bp.common.ds.SuffixTree.setNthChild(SuffixTree.java:427)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:105)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+TRACE 300234:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:151)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300282:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:105)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.main(Trawler.java:439)
+TRACE 300290:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:87)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300238:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:136)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300239:
+	bp.common.ds.SuffixTree.constructLargeNode(SuffixTree.java:231)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:111)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+TRACE 300284:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:136)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.main(Trawler.java:439)
+TRACE 300263:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:82)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300155:
+	bp.trawler.Alphabet.readInString(Alphabet.java:109)
+	bp.trawler.Trawler.main(Trawler.java:379)
+TRACE 300252:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:67)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300288:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:82)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300233:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:132)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300154:
+	bp.common.io.FastaParser_Generator_Int.readFile(FastaParser_Generator_Int.java:94)
+	bp.trawler.Alphabet.readInString(Alphabet.java:109)
+	bp.trawler.Trawler.main(Trawler.java:379)
+TRACE 300293:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:90)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300170:
+	bp.trawler.TrawlerStatistics.shuffleSequences(TrawlerStatistics.java:74)
+	bp.trawler.Trawler.tailValues(Trawler.java:251)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300287:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:132)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.main(Trawler.java:439)
+TRACE 300166:
+	bp.trawler.TrawlerStatistics.buckets(TrawlerStatistics.java:40)
+	bp.trawler.Trawler.main(Trawler.java:386)
+TRACE 300261:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:88)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300266:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:90)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300202:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:129)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300206:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:145)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300150:
+	java.io.FileInputStream.readBytes(FileInputStream.java:Unknown line)
+	java.io.FileInputStream.read(FileInputStream.java:255)
+	java.io.BufferedInputStream.fill(BufferedInputStream.java:246)
+	java.io.BufferedInputStream.read(BufferedInputStream.java:265)
+TRACE 300165:
+	bp.trawler.TrawlerStatistics.buckets(TrawlerStatistics.java:41)
+	bp.trawler.Trawler.main(Trawler.java:386)
+TRACE 300172:
+	bp.trawler.TrawlerStatistics.shuffleSequences(TrawlerStatistics.java:76)
+	bp.trawler.Trawler.tailValues(Trawler.java:251)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300204:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:100)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300260:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:91)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300072:
+	java.lang.ClassLoader.findBootstrapClass(ClassLoader.java:Unknown line)
+	java.lang.ClassLoader.findBootstrapClassOrNull(ClassLoader.java:1015)
+	java.lang.ClassLoader.loadClass(ClassLoader.java:413)
+	java.lang.ClassLoader.loadClass(ClassLoader.java:411)
+TRACE 300163:
+	bp.trawler.TrawlerStatistics.buckets(TrawlerStatistics.java:40)
+	bp.trawler.Trawler.main(Trawler.java:383)
+TRACE 300167:
+	bp.trawler.TrawlerStatistics.buckets(TrawlerStatistics.java:48)
+	bp.trawler.Trawler.main(Trawler.java:386)
+TRACE 300177:
+	java.util.Collections.shuffle(Collections.java:465)
+	java.util.Collections.shuffle(Collections.java:427)
+	bp.trawler.TrawlerStatistics.shuffleSequences(TrawlerStatistics.java:79)
+	bp.trawler.Trawler.tailValues(Trawler.java:251)
+TRACE 300179:
+	java.util.Collections.shuffle(Collections.java:465)
+	java.util.Collections.shuffle(Collections.java:427)
+	bp.trawler.TrawlerStatistics.shuffleSequences(TrawlerStatistics.java:79)
+	bp.trawler.Trawler.tailValues(Trawler.java:251)
+TRACE 300183:
+	bp.trawler.TrawlerStatistics.shuffleSequences(TrawlerStatistics.java:85)
+	bp.trawler.Trawler.tailValues(Trawler.java:251)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300195:
+	bp.trawler.Alphabet.translateString(Alphabet.java:127)
+	bp.trawler.Trawler.runTrawler(Trawler.java:289)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300203:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:153)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300208:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:102)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300228:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:145)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300273:
+	bp.trawler.Alphabet.translateString(Alphabet.java:127)
+	bp.trawler.Trawler.runTrawler(Trawler.java:289)
+	bp.trawler.Trawler.main(Trawler.java:439)
+TRACE 300294:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:88)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300295:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:87)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300305:
+	java.lang.Double.longBitsToDouble(Double.java:Unknown line)
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.estimateDecExp(FloatingDecimal.java:820)
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.dtoa(FloatingDecimal.java:515)
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.access$100(FloatingDecimal.java:259)
+TRACE 300314:
+	bp.trawler.Trawler.print(Trawler.java:359)
+	bp.trawler.Trawler$1.pro(Trawler.java:343)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:94)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300069:
+	java.lang.ClassLoader.defineClass1(ClassLoader.java:Unknown line)
+	java.lang.ClassLoader.defineClass(ClassLoader.java:763)
+	java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)
+	java.net.URLClassLoader.defineClass(URLClassLoader.java:468)
+TRACE 300128:
+	java.util.zip.Inflater.inflateBytes(Inflater.java:Unknown line)
+	java.util.zip.Inflater.inflate(Inflater.java:259)
+	java.util.zip.InflaterInputStream.read(InflaterInputStream.java:152)
+	sun.misc.Resource.getBytes(Resource.java:124)
+TRACE 300182:
+	java.util.Collections.shuffle(Collections.java:475)
+	java.util.Collections.shuffle(Collections.java:427)
+	bp.trawler.TrawlerStatistics.shuffleSequences(TrawlerStatistics.java:79)
+	bp.trawler.Trawler.tailValues(Trawler.java:251)
+TRACE 300184:
+	bp.trawler.TrawlerStatistics.shuffleSequences(TrawlerStatistics.java:82)
+	bp.trawler.Trawler.tailValues(Trawler.java:251)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300194:
+	bp.trawler.Alphabet.translateString(Alphabet.java:128)
+	bp.trawler.Trawler.runTrawler(Trawler.java:289)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300205:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:119)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300211:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:148)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300225:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:100)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300240:
+	bp.common.ds.SuffixTree.constructLargeNode(SuffixTree.java:231)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:93)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+TRACE 300262:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:67)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300275:
+	bp.common.ds.SuffixTree.rescan(SuffixTree.java:350)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:151)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+TRACE 300289:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:67)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300297:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300298:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300299:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300306:
+	sun.nio.cs.UTF_8$Encoder.encodeArrayLoop(UTF_8.java:595)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:691)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:579)
+	sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:271)
+TRACE 300308:
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.dtoa(FloatingDecimal.java:646)
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.access$100(FloatingDecimal.java:259)
+	sun.misc.FloatingDecimal.getBinaryToASCIIConverter(FloatingDecimal.java:1825)
+	sun.misc.FloatingDecimal.appendTo(FloatingDecimal.java:98)
+TRACE 300006:
+	java.lang.ClassValue.<clinit>(ClassValue.java:197)
+	java.lang.invoke.MethodHandleImpl.<clinit>(MethodHandleImpl.java:1596)
+	java.lang.invoke.MethodHandle.<clinit>(MethodHandle.java:422)
+TRACE 300012:
+	java.lang.ClassLoader.loadClass(ClassLoader.java:406)
+	sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:349)
+	java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	sun.launcher.LauncherHelper.checkAndLoadMain(LauncherHelper.java:495)
+TRACE 300019:
+	sun.misc.URLClassPath$JarLoader.<init>(URLClassPath.java:822)
+	sun.misc.URLClassPath$3.run(URLClassPath.java:575)
+	sun.misc.URLClassPath$3.run(URLClassPath.java:565)
+	java.security.AccessController.doPrivileged(AccessController.java:Unknown line)
+TRACE 300026:
+	java.lang.Class.forName0(Class.java:Unknown line)
+	java.lang.Class.forName(Class.java:348)
+	sun.nio.cs.FastCharsetProvider.lookup(FastCharsetProvider.java:118)
+	sun.nio.cs.FastCharsetProvider.charsetForName(FastCharsetProvider.java:133)
+TRACE 300033:
+	sun.misc.Perf.createLong(Perf.java:Unknown line)
+	sun.misc.PerfCounter.<init>(PerfCounter.java:65)
+	sun.misc.PerfCounter.newPerfCounter(PerfCounter.java:71)
+	sun.misc.PerfCounter$CoreCounters.<clinit>(PerfCounter.java:128)
+TRACE 300040:
+	java.util.zip.ZipFile.getInflater(ZipFile.java:469)
+	java.util.zip.ZipFile.getInputStream(ZipFile.java:388)
+	java.util.jar.JarFile.getBytes(JarFile.java:424)
+	java.util.jar.JarFile.checkForSpecialAttributes(JarFile.java:555)
+TRACE 300044:
+	java.util.zip.ZipFile.open(ZipFile.java:Unknown line)
+	java.util.zip.ZipFile.<init>(ZipFile.java:225)
+	java.util.zip.ZipFile.<init>(ZipFile.java:155)
+	java.util.jar.JarFile.<init>(JarFile.java:166)
+TRACE 300045:
+	java.lang.AbstractStringBuilder.ensureCapacityInternal(AbstractStringBuilder.java:125)
+	java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:448)
+	java.lang.StringBuilder.append(StringBuilder.java:136)
+	sun.net.util.URLUtil.urlNoFragString(URLUtil.java:77)
+TRACE 300056:
+	sun.misc.URLClassPath$JarLoader.checkResource(URLClassPath.java:982)
+	sun.misc.URLClassPath$JarLoader.getResource(URLClassPath.java:1056)
+	sun.misc.URLClassPath.getResource(URLClassPath.java:249)
+	java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+TRACE 300060:
+	sun.net.www.protocol.file.Handler.createFileURLConnection(Handler.java:112)
+	sun.net.www.protocol.file.Handler.openConnection(Handler.java:81)
+	sun.net.www.protocol.file.Handler.openConnection(Handler.java:72)
+	java.net.URL.openConnection(URL.java:991)
+TRACE 300068:
+	sun.misc.Unsafe.getObjectVolatile(Unsafe.java:Unknown line)
+	java.util.concurrent.ConcurrentHashMap.tabAt(ConcurrentHashMap.java:755)
+	java.util.concurrent.ConcurrentHashMap.putVal(ConcurrentHashMap.java:1018)
+	java.util.concurrent.ConcurrentHashMap.putIfAbsent(ConcurrentHashMap.java:1535)
+TRACE 300074:
+	java.util.Arrays.copyOf(Arrays.java:3236)
+	java.util.zip.ZipCoder.getBytes(ZipCoder.java:89)
+	java.util.zip.ZipFile.getInputStream(ZipFile.java:370)
+	java.util.jar.JarFile.getInputStream(JarFile.java:447)
+TRACE 300079:
+	java.util.logging.Logger.<clinit>(Logger.java:248)
+	bp.trawler.Trawler.<clinit>(Trawler.java:29)
+TRACE 300085:
+	java.util.logging.LogManager.<init>(LogManager.java:164)
+	java.util.logging.LogManager.<init>(LogManager.java:251)
+	java.util.logging.LogManager$1.run(LogManager.java:204)
+	java.util.logging.LogManager$1.run(LogManager.java:181)
+TRACE 300099:
+	java.util.logging.Logger.accessCheckedHandlers(Logger.java:1783)
+	java.util.logging.Logger.getHandlers(Logger.java:1777)
+	java.util.logging.LogManager.resetLogger(LogManager.java:1341)
+	java.util.logging.LogManager.reset(LogManager.java:1332)
+TRACE 300108:
+	java.lang.Class.forName0(Class.java:Unknown line)
+	java.lang.Class.forName(Class.java:348)
+	sun.util.logging.LoggingSupport$1.run(LoggingSupport.java:54)
+	sun.util.logging.LoggingSupport$1.run(LoggingSupport.java:49)
+TRACE 300115:
+	java.util.HashMap$Values.iterator(HashMap.java:968)
+	java.util.logging.LogManager$LogNode.walkAndSetParent(LogManager.java:1621)
+	java.util.logging.LogManager$LoggerContext.addLocalLogger(LogManager.java:833)
+	java.util.logging.LogManager$LoggerContext.addLocalLogger(LogManager.java:758)
+TRACE 300117:
+	java.lang.String.indexOf(String.java:1772)
+	java.lang.String.indexOf(String.java:1718)
+	java.lang.String.indexOf(String.java:1698)
+	sun.net.www.ParseUtil.canonizeString(ParseUtil.java:242)
+TRACE 300120:
+	java.util.regex.Pattern.compile(Pattern.java:1689)
+	java.util.regex.Pattern.<init>(Pattern.java:1351)
+	java.util.regex.Pattern.compile(Pattern.java:1028)
+	bp.trawler.Alphabet.<init>(Alphabet.java:27)
+TRACE 300129:
+	java.lang.String.toCharArray(String.java:2899)
+	java.util.zip.ZipCoder.getBytes(ZipCoder.java:78)
+	java.util.zip.ZipFile.getEntry(ZipFile.java:316)
+	java.util.jar.JarFile.getEntry(JarFile.java:240)
+TRACE 300133:
+	java.lang.System.arraycopy(System.java:Unknown line)
+	java.lang.String.toCharArray(String.java:2900)
+	java.util.zip.ZipCoder.getBytes(ZipCoder.java:78)
+	java.util.zip.ZipFile.getEntry(ZipFile.java:316)
+TRACE 300140:
+	sun.misc.FDBigInteger.mult(FDBigInteger.java:1126)
+	sun.misc.FDBigInteger.<clinit>(FDBigInteger.java:132)
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.dtoa(FloatingDecimal.java:448)
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.access$100(FloatingDecimal.java:259)
+TRACE 300141:
+	java.util.regex.Pattern.matcher(Pattern.java:1093)
+	bp.common.io.InputMunger.parseInput(InputMunger.java:234)
+	bp.trawler.Trawler.setCommandLineArguments(Trawler.java:196)
+	bp.trawler.Trawler.main(Trawler.java:367)
+TRACE 300145:
+	bp.common.io.InputMunger.parseInput(InputMunger.java:240)
+	bp.trawler.Trawler.setCommandLineArguments(Trawler.java:196)
+	bp.trawler.Trawler.main(Trawler.java:367)
+TRACE 300146:
+	bp.common.io.InputMunger.watchStrings(InputMunger.java:404)
+	bp.trawler.Trawler.main(Trawler.java:372)
+TRACE 300147:
+	java.lang.String.toCharArray(String.java:2899)
+	java.util.zip.ZipCoder.getBytes(ZipCoder.java:78)
+	java.util.zip.ZipFile.getInputStream(ZipFile.java:370)
+	java.util.jar.JarFile.getInputStream(JarFile.java:447)
+TRACE 300148:
+	java.lang.String.replace(String.java:2078)
+	java.net.URLClassLoader$1.run(URLClassLoader.java:365)
+	java.net.URLClassLoader$1.run(URLClassLoader.java:363)
+	java.security.AccessController.doPrivileged(AccessController.java:Unknown line)
+TRACE 300149:
+	java.lang.Object.getClass(Object.java:Unknown line)
+	java.net.URL.isBuiltinStreamHandler(URL.java:1416)
+	java.net.URLStreamHandler.setURL(URLStreamHandler.java:541)
+	java.net.URLStreamHandler.setURL(URLStreamHandler.java:596)
+TRACE 300151:
+	bp.common.io.FastaParser_Generator_Int.readFile(FastaParser_Generator_Int.java:95)
+	bp.trawler.Alphabet.readInString(Alphabet.java:109)
+	bp.trawler.Trawler.main(Trawler.java:374)
+TRACE 300152:
+	bp.common.io.FastaParser_Generator_Int.readFile(FastaParser_Generator_Int.java:94)
+	bp.trawler.Alphabet.readInString(Alphabet.java:109)
+	bp.trawler.Trawler.main(Trawler.java:374)
+TRACE 300153:
+	bp.trawler.Alphabet.readInString(Alphabet.java:103)
+	bp.trawler.Trawler.main(Trawler.java:379)
+TRACE 300156:
+	bp.common.io.FastaParser_Generator_Int.getTitle(FastaParser_Generator_Int.java:48)
+	bp.common.io.FastaParser_Generator_Int.gen(FastaParser_Generator_Int.java:70)
+	bp.common.io.FastaParser_Generator_Int.gen(FastaParser_Generator_Int.java:67)
+	bp.common.io.FastaParser_Generator_Int.readFile(FastaParser_Generator_Int.java:94)
+TRACE 300158:
+	bp.common.io.FastaParser_Generator_Int.readFile(FastaParser_Generator_Int.java:94)
+	bp.trawler.Alphabet.readInString(Alphabet.java:109)
+	bp.trawler.Trawler.main(Trawler.java:379)
+TRACE 300159:
+	bp.common.io.FastaParser_Generator_Int.isNewSequence(FastaParser_Generator_Int.java:101)
+	bp.trawler.Alphabet.readInString(Alphabet.java:118)
+	bp.trawler.Trawler.main(Trawler.java:379)
+TRACE 300160:
+	java.io.BufferedInputStream.fill(BufferedInputStream.java:214)
+	java.io.BufferedInputStream.read(BufferedInputStream.java:265)
+	bp.common.io.FastaParser_Generator_Int.gen(FastaParser_Generator_Int.java:60)
+	bp.common.io.FastaParser_Generator_Int.readFile(FastaParser_Generator_Int.java:94)
+TRACE 300161:
+	bp.common.io.FastaParser_Generator_Int.gen(FastaParser_Generator_Int.java:70)
+	bp.common.io.FastaParser_Generator_Int.gen(FastaParser_Generator_Int.java:67)
+	bp.common.io.FastaParser_Generator_Int.readFile(FastaParser_Generator_Int.java:94)
+	bp.trawler.Alphabet.readInString(Alphabet.java:109)
+TRACE 300162:
+	bp.trawler.Alphabet.readInString(Alphabet.java:119)
+	bp.trawler.Trawler.main(Trawler.java:379)
+TRACE 300164:
+	bp.trawler.TrawlerStatistics.buckets(TrawlerStatistics.java:40)
+	bp.trawler.Trawler.main(Trawler.java:386)
+TRACE 300168:
+	java.lang.Object.clone(Object.java:Unknown line)
+	bp.trawler.Trawler.tailValues(Trawler.java:247)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300169:
+	java.lang.Object.clone(Object.java:Unknown line)
+	bp.trawler.Trawler.tailValues(Trawler.java:250)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300171:
+	java.lang.System.arraycopy(System.java:Unknown line)
+	bp.trawler.TrawlerStatistics.shuffleSequences(TrawlerStatistics.java:75)
+	bp.trawler.Trawler.tailValues(Trawler.java:251)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300174:
+	java.util.LinkedList.toArray(LinkedList.java:1052)
+	java.util.Collections.shuffle(Collections.java:462)
+	java.util.Collections.shuffle(Collections.java:427)
+	bp.trawler.TrawlerStatistics.shuffleSequences(TrawlerStatistics.java:79)
+TRACE 300175:
+	java.util.LinkedList.toArray(LinkedList.java:1052)
+	java.util.Collections.shuffle(Collections.java:462)
+	java.util.Collections.shuffle(Collections.java:427)
+	bp.trawler.TrawlerStatistics.shuffleSequences(TrawlerStatistics.java:79)
+TRACE 300176:
+	java.util.Collections.swap(Collections.java:506)
+	java.util.Collections.shuffle(Collections.java:466)
+	java.util.Collections.shuffle(Collections.java:427)
+	bp.trawler.TrawlerStatistics.shuffleSequences(TrawlerStatistics.java:79)
+TRACE 300178:
+	java.util.Collections.shuffle(Collections.java:465)
+	java.util.Collections.shuffle(Collections.java:427)
+	bp.trawler.TrawlerStatistics.shuffleSequences(TrawlerStatistics.java:79)
+	bp.trawler.Trawler.tailValues(Trawler.java:251)
+TRACE 300181:
+	java.util.LinkedList$ListItr.next(LinkedList.java:894)
+	java.util.Collections.shuffle(Collections.java:474)
+	java.util.Collections.shuffle(Collections.java:427)
+	bp.trawler.TrawlerStatistics.shuffleSequences(TrawlerStatistics.java:79)
+TRACE 300185:
+	bp.trawler.TrawlerStatistics.shuffleSequences(TrawlerStatistics.java:81)
+	bp.trawler.Trawler.tailValues(Trawler.java:251)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300186:
+	bp.trawler.TrawlerStatistics.replaceSequences(TrawlerStatistics.java:57)
+	bp.trawler.Trawler.tailValues(Trawler.java:253)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300187:
+	bp.trawler.TrawlerStatistics.replaceSequences(TrawlerStatistics.java:60)
+	bp.trawler.Trawler.tailValues(Trawler.java:253)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300188:
+	bp.trawler.TrawlerStatistics.replaceSequences(TrawlerStatistics.java:63)
+	bp.trawler.Trawler.tailValues(Trawler.java:253)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300189:
+	java.util.TreeSet.<init>(TreeSet.java:124)
+	bp.trawler.Trawler.tailValues(Trawler.java:259)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300190:
+	bp.trawler.Alphabet.translateString(Alphabet.java:128)
+	bp.trawler.Trawler.runTrawler(Trawler.java:286)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300191:
+	bp.trawler.Alphabet.translateString(Alphabet.java:129)
+	bp.trawler.Trawler.runTrawler(Trawler.java:286)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300192:
+	bp.trawler.Alphabet.translateString(Alphabet.java:128)
+	bp.trawler.Trawler.runTrawler(Trawler.java:286)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300193:
+	bp.trawler.Alphabet.translateString(Alphabet.java:127)
+	bp.trawler.Trawler.runTrawler(Trawler.java:289)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300196:
+	bp.trawler.Alphabet.translateString(Alphabet.java:127)
+	bp.trawler.Trawler.runTrawler(Trawler.java:289)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300197:
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:28)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300198:
+	bp.common.ds.SuffixTree.isNode(SuffixTree.java:331)
+	bp.common.ds.SuffixTree.setSibling(SuffixTree.java:445)
+	bp.common.ds.SuffixTree.setNthChild(SuffixTree.java:427)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:101)
+TRACE 300199:
+	bp.common.ds.SuffixTree.rescan(SuffixTree.java:347)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:151)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+TRACE 300200:
+	bp.common.ds.SuffixTree.getChild(SuffixTree.java:283)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:100)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+TRACE 300201:
+	bp.common.ds.SuffixTree.compare(SuffixTree.java:174)
+	bp.common.ds.SuffixTree.getChild(SuffixTree.java:285)
+	bp.common.ds.SuffixTree.scanPrefix(SuffixTree.java:369)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:119)
+TRACE 300207:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:129)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300209:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:153)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300210:
+	bp.common.ds.SuffixTree.setSibling(SuffixTree.java:454)
+	bp.common.ds.SuffixTree.setNthChild(SuffixTree.java:427)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:105)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+TRACE 300212:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:105)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300213:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:105)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300214:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:136)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300216:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:119)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300217:
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:27)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300218:
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:28)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300220:
+	bp.common.ds.SuffixTree.constructSmallNode(SuffixTree.java:188)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:98)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+TRACE 300221:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:98)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300230:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:102)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300241:
+	bp.common.ds.SuffixTree.constructLargeNode(SuffixTree.java:220)
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:93)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+TRACE 300242:
+	bp.trawler.Trawler.runTrawler(Trawler.java:300)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300244:
+	bp.trawler.TrawlerTools.parseCounts(TrawlerTools.java:119)
+	bp.trawler.TrawlerTools.parseCounts(TrawlerTools.java:125)
+	bp.trawler.TrawlerTools.parseCounts(TrawlerTools.java:125)
+	bp.trawler.TrawlerTools.parseCounts(TrawlerTools.java:125)
+TRACE 300245:
+	bp.trawler.Trawler.runTrawler(Trawler.java:301)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300247:
+	bp.trawler.TrawlerTools.parseCounts(TrawlerTools.java:126)
+	bp.trawler.TrawlerTools.parseCounts(TrawlerTools.java:125)
+	bp.trawler.TrawlerTools.parseCounts(TrawlerTools.java:125)
+	bp.trawler.Trawler.runTrawler(Trawler.java:304)
+TRACE 300248:
+	bp.trawler.Trawler.runTrawler(Trawler.java:305)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+	bp.trawler.Trawler.main(Trawler.java:411)
+TRACE 300250:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:39)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:90)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300251:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:38)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:90)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300254:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:22)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:87)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300255:
+	bp.trawler.TrawlerStatistics$1.pro(TrawlerStatistics.java:99)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:94)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300256:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:30)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:87)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300259:
+	java.util.TreeSet.size(TreeSet.java:207)
+	bp.trawler.TrawlerStatistics$1.pro(TrawlerStatistics.java:111)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:94)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300264:
+	bp.trawler.TrawlerStatistics$1.pro(TrawlerStatistics.java:107)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:94)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300265:
+	bp.trawler.TrawlerStatistics$1.pro(TrawlerStatistics.java:111)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:94)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300268:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300269:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:50)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:90)
+	bp.trawler.Trawler.runTrawler(Trawler.java:313)
+	bp.trawler.Trawler.tailValues(Trawler.java:261)
+TRACE 300272:
+	bp.trawler.Alphabet.translateString(Alphabet.java:128)
+	bp.trawler.Trawler.runTrawler(Trawler.java:286)
+	bp.trawler.Trawler.main(Trawler.java:439)
+TRACE 300274:
+	bp.trawler.Trawler.runTrawler(Trawler.java:289)
+	bp.trawler.Trawler.main(Trawler.java:439)
+TRACE 300276:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:159)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.main(Trawler.java:439)
+TRACE 300277:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:119)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.main(Trawler.java:439)
+TRACE 300278:
+	bp.common.ds.SuffixTree.looseMcCreightsAlgorithm(SuffixTree.java:101)
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:32)
+	bp.trawler.Trawler.runTrawler(Trawler.java:293)
+	bp.trawler.Trawler.main(Trawler.java:439)
+TRACE 300279:
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:27)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.main(Trawler.java:439)
+TRACE 300280:
+	bp.common.ds.SuffixTree.<init>(SuffixTree.java:28)
+	bp.trawler.Trawler.runTrawler(Trawler.java:296)
+	bp.trawler.Trawler.main(Trawler.java:439)
+TRACE 300291:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:91)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300292:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:96)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300296:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:67)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300300:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300301:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:88)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300302:
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:97)
+TRACE 300303:
+	java.lang.Float.floatToRawIntBits(Float.java:Unknown line)
+	sun.misc.FloatingDecimal.getBinaryToASCIIConverter(FloatingDecimal.java:1790)
+	sun.misc.FloatingDecimal.appendTo(FloatingDecimal.java:98)
+	java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:719)
+TRACE 300304:
+	bp.trawler.Trawler.print(Trawler.java:352)
+	bp.trawler.Trawler$1.pro(Trawler.java:343)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:94)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300307:
+	java.lang.System.arraycopy(System.java:Unknown line)
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.getChars(FloatingDecimal.java:927)
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.appendTo(FloatingDecimal.java:307)
+	sun.misc.FloatingDecimal.appendTo(FloatingDecimal.java:98)
+TRACE 300309:
+	java.io.PrintWriter.write(PrintWriter.java:403)
+	bp.trawler.Trawler.print(Trawler.java:359)
+	bp.trawler.Trawler$1.pro(Trawler.java:343)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:94)
+TRACE 300310:
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.dtoa(FloatingDecimal.java:431)
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.access$100(FloatingDecimal.java:259)
+	sun.misc.FloatingDecimal.getBinaryToASCIIConverter(FloatingDecimal.java:1825)
+	sun.misc.FloatingDecimal.appendTo(FloatingDecimal.java:98)
+TRACE 300311:
+	bp.trawler.Trawler.print(Trawler.java:357)
+	bp.trawler.Trawler$1.pro(Trawler.java:343)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:94)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:68)
+TRACE 300312:
+	java.io.PrintWriter.write(PrintWriter.java:405)
+	bp.trawler.Trawler.print(Trawler.java:359)
+	bp.trawler.Trawler$1.pro(Trawler.java:343)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:94)
+TRACE 300313:
+	java.io.PrintWriter.write(PrintWriter.java:454)
+	java.io.PrintWriter.write(PrintWriter.java:473)
+	bp.trawler.Trawler.print(Trawler.java:352)
+	bp.trawler.Trawler$1.pro(Trawler.java:343)
+TRACE 300315:
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.dtoa(FloatingDecimal.java:426)
+	sun.misc.FloatingDecimal$BinaryToASCIIBuffer.access$100(FloatingDecimal.java:259)
+	sun.misc.FloatingDecimal.getBinaryToASCIIConverter(FloatingDecimal.java:1825)
+	sun.misc.FloatingDecimal.appendTo(FloatingDecimal.java:98)
+TRACE 300316:
+	java.io.PrintWriter.write(PrintWriter.java:473)
+	bp.trawler.Trawler.print(Trawler.java:352)
+	bp.trawler.Trawler$1.pro(Trawler.java:343)
+	bp.trawler.TrawlerTools.scan(TrawlerTools.java:94)
+TRACE 300318:
+	java.io.FileOutputStream.close0(FileOutputStream.java:Unknown line)
+	java.io.FileOutputStream.access$000(FileOutputStream.java:53)
+	java.io.FileOutputStream$1.close(FileOutputStream.java:356)
+	java.io.FileDescriptor.closeAll(FileDescriptor.java:212)
+CPU SAMPLES BEGIN (total = 5278) Tue Jun 16 20:23:49 2020
+rank   self  accum   count trace method
+   1 28.78% 28.78%    1519 300253 bp.trawler.TrawlerTools.scan
+   2 16.86% 45.64%     890 300257 bp.trawler.TrawlerTools.scan
+   3  5.34% 50.99%     282 300219 bp.common.ds.SuffixTree.rescan
+   4  4.93% 55.91%     260 300231 bp.common.ds.SuffixTree.getChild
+   5  4.59% 60.50%     242 300246 bp.trawler.TrawlerTools.parseCounts
+   6  4.28% 64.78%     226 300215 bp.common.ds.SuffixTree.getChild
+   7  3.52% 68.30%     186 300229 bp.common.ds.SuffixTree.scanPrefix
+   8  3.45% 71.75%     182 300258 bp.trawler.TrawlerTools.scan
+   9  1.95% 73.70%     103 300222 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  10  1.80% 75.50%      95 300285 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  11  1.52% 77.02%      80 300281 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  12  1.50% 78.51%      79 300224 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  13  1.46% 79.97%      77 300223 bp.common.ds.SuffixTree.setSibling
+  14  1.38% 81.36%      73 300243 bp.trawler.TrawlerTools.parseCounts
+  15  1.16% 82.51%      61 300237 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  16  1.14% 83.65%      60 300283 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  17  0.95% 84.60%      50 300235 bp.common.ds.SuffixTree.getChild
+  18  0.87% 85.47%      46 300227 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  19  0.87% 86.34%      46 300232 bp.common.ds.SuffixTree.setSibling
+  20  0.87% 87.21%      46 300267 bp.trawler.TrawlerTools.scan
+  21  0.81% 88.03%      43 300236 bp.common.ds.SuffixTree.scanPrefix
+  22  0.78% 88.80%      41 300286 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  23  0.76% 89.56%      40 300157 bp.common.io.FastaParser_Generator_Int.readFile
+  24  0.74% 90.30%      39 300226 bp.common.ds.SuffixTree.setSibling
+  25  0.68% 90.98%      36 300234 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  26  0.66% 91.64%      35 300282 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  27  0.64% 92.29%      34 300290 bp.trawler.TrawlerTools.scan
+  28  0.63% 92.91%      33 300238 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  29  0.49% 93.41%      26 300239 bp.common.ds.SuffixTree.constructLargeNode
+  30  0.40% 93.80%      21 300284 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  31  0.30% 94.11%      16 300263 bp.trawler.TrawlerTools.scan
+  32  0.23% 94.33%      12 300155 bp.trawler.Alphabet.readInString
+  33  0.19% 94.52%      10 300252 bp.trawler.TrawlerTools.scan
+  34  0.19% 94.71%      10 300288 bp.trawler.TrawlerTools.scan
+  35  0.17% 94.88%       9 300233 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  36  0.15% 95.04%       8 300154 bp.common.io.FastaParser_Generator_Int.readFile
+  37  0.15% 95.19%       8 300293 bp.trawler.TrawlerTools.scan
+  38  0.13% 95.32%       7 300170 bp.trawler.TrawlerStatistics.shuffleSequences
+  39  0.13% 95.45%       7 300287 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  40  0.11% 95.57%       6 300166 bp.trawler.TrawlerStatistics.buckets
+  41  0.11% 95.68%       6 300261 bp.trawler.TrawlerTools.scan
+  42  0.11% 95.79%       6 300266 bp.trawler.TrawlerTools.scan
+  43  0.09% 95.89%       5 300202 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  44  0.09% 95.98%       5 300206 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  45  0.08% 96.06%       4 300150 java.io.FileInputStream.readBytes
+  46  0.08% 96.13%       4 300165 bp.trawler.TrawlerStatistics.buckets
+  47  0.08% 96.21%       4 300172 bp.trawler.TrawlerStatistics.shuffleSequences
+  48  0.08% 96.29%       4 300204 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  49  0.08% 96.36%       4 300260 bp.trawler.TrawlerTools.scan
+  50  0.06% 96.42%       3 300072 java.lang.ClassLoader.findBootstrapClass
+  51  0.06% 96.48%       3 300163 bp.trawler.TrawlerStatistics.buckets
+  52  0.06% 96.53%       3 300167 bp.trawler.TrawlerStatistics.buckets
+  53  0.06% 96.59%       3 300177 java.util.Collections.shuffle
+  54  0.06% 96.65%       3 300179 java.util.Collections.shuffle
+  55  0.06% 96.70%       3 300183 bp.trawler.TrawlerStatistics.shuffleSequences
+  56  0.06% 96.76%       3 300195 bp.trawler.Alphabet.translateString
+  57  0.06% 96.82%       3 300203 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  58  0.06% 96.87%       3 300208 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  59  0.06% 96.93%       3 300228 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  60  0.06% 96.99%       3 300273 bp.trawler.Alphabet.translateString
+  61  0.06% 97.04%       3 300294 bp.trawler.TrawlerTools.scan
+  62  0.06% 97.10%       3 300295 bp.trawler.TrawlerTools.scan
+  63  0.06% 97.16%       3 300305 java.lang.Double.longBitsToDouble
+  64  0.06% 97.21%       3 300314 bp.trawler.Trawler.print
+  65  0.04% 97.25%       2 300069 java.lang.ClassLoader.defineClass1
+  66  0.04% 97.29%       2 300128 java.util.zip.Inflater.inflateBytes
+  67  0.04% 97.33%       2 300182 java.util.Collections.shuffle
+  68  0.04% 97.37%       2 300184 bp.trawler.TrawlerStatistics.shuffleSequences
+  69  0.04% 97.40%       2 300194 bp.trawler.Alphabet.translateString
+  70  0.04% 97.44%       2 300205 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  71  0.04% 97.48%       2 300211 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  72  0.04% 97.52%       2 300225 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+  73  0.04% 97.56%       2 300240 bp.common.ds.SuffixTree.constructLargeNode
+  74  0.04% 97.59%       2 300262 bp.trawler.TrawlerTools.scan
+  75  0.04% 97.63%       2 300275 bp.common.ds.SuffixTree.rescan
+  76  0.04% 97.67%       2 300289 bp.trawler.TrawlerTools.scan
+  77  0.04% 97.71%       2 300297 bp.trawler.TrawlerTools.scan
+  78  0.04% 97.75%       2 300298 bp.trawler.TrawlerTools.scan
+  79  0.04% 97.78%       2 300299 bp.trawler.TrawlerTools.scan
+  80  0.04% 97.82%       2 300306 sun.nio.cs.UTF_8$Encoder.encodeArrayLoop
+  81  0.04% 97.86%       2 300308 sun.misc.FloatingDecimal$BinaryToASCIIBuffer.dtoa
+  82  0.02% 97.88%       1 300006 java.lang.ClassValue.<clinit>
+  83  0.02% 97.90%       1 300012 java.lang.ClassLoader.loadClass
+  84  0.02% 97.92%       1 300019 sun.misc.URLClassPath$JarLoader.<init>
+  85  0.02% 97.93%       1 300026 java.lang.Class.forName0
+  86  0.02% 97.95%       1 300033 sun.misc.Perf.createLong
+  87  0.02% 97.97%       1 300040 java.util.zip.ZipFile.getInflater
+  88  0.02% 97.99%       1 300044 java.util.zip.ZipFile.open
+  89  0.02% 98.01%       1 300045 java.lang.AbstractStringBuilder.ensureCapacityInternal
+  90  0.02% 98.03%       1 300056 sun.misc.URLClassPath$JarLoader.checkResource
+  91  0.02% 98.05%       1 300060 sun.net.www.protocol.file.Handler.createFileURLConnection
+  92  0.02% 98.07%       1 300068 sun.misc.Unsafe.getObjectVolatile
+  93  0.02% 98.09%       1 300074 java.util.Arrays.copyOf
+  94  0.02% 98.11%       1 300079 java.util.logging.Logger.<clinit>
+  95  0.02% 98.12%       1 300085 java.util.logging.LogManager.<init>
+  96  0.02% 98.14%       1 300099 java.util.logging.Logger.accessCheckedHandlers
+  97  0.02% 98.16%       1 300108 java.lang.Class.forName0
+  98  0.02% 98.18%       1 300115 java.util.HashMap$Values.iterator
+  99  0.02% 98.20%       1 300117 java.lang.String.indexOf
+ 100  0.02% 98.22%       1 300120 java.util.regex.Pattern.compile
+ 101  0.02% 98.24%       1 300129 java.lang.String.toCharArray
+ 102  0.02% 98.26%       1 300133 java.lang.System.arraycopy
+ 103  0.02% 98.28%       1 300140 sun.misc.FDBigInteger.mult
+ 104  0.02% 98.29%       1 300141 java.util.regex.Pattern.matcher
+ 105  0.02% 98.31%       1 300145 bp.common.io.InputMunger.parseInput
+ 106  0.02% 98.33%       1 300146 bp.common.io.InputMunger.watchStrings
+ 107  0.02% 98.35%       1 300147 java.lang.String.toCharArray
+ 108  0.02% 98.37%       1 300148 java.lang.String.replace
+ 109  0.02% 98.39%       1 300149 java.lang.Object.getClass
+ 110  0.02% 98.41%       1 300151 bp.common.io.FastaParser_Generator_Int.readFile
+ 111  0.02% 98.43%       1 300152 bp.common.io.FastaParser_Generator_Int.readFile
+ 112  0.02% 98.45%       1 300153 bp.trawler.Alphabet.readInString
+ 113  0.02% 98.47%       1 300156 bp.common.io.FastaParser_Generator_Int.getTitle
+ 114  0.02% 98.48%       1 300158 bp.common.io.FastaParser_Generator_Int.readFile
+ 115  0.02% 98.50%       1 300159 bp.common.io.FastaParser_Generator_Int.isNewSequence
+ 116  0.02% 98.52%       1 300160 java.io.BufferedInputStream.fill
+ 117  0.02% 98.54%       1 300161 bp.common.io.FastaParser_Generator_Int.gen
+ 118  0.02% 98.56%       1 300162 bp.trawler.Alphabet.readInString
+ 119  0.02% 98.58%       1 300164 bp.trawler.TrawlerStatistics.buckets
+ 120  0.02% 98.60%       1 300168 java.lang.Object.clone
+ 121  0.02% 98.62%       1 300169 java.lang.Object.clone
+ 122  0.02% 98.64%       1 300171 java.lang.System.arraycopy
+ 123  0.02% 98.65%       1 300174 java.util.LinkedList.toArray
+ 124  0.02% 98.67%       1 300175 java.util.LinkedList.toArray
+ 125  0.02% 98.69%       1 300176 java.util.Collections.swap
+ 126  0.02% 98.71%       1 300178 java.util.Collections.shuffle
+ 127  0.02% 98.73%       1 300181 java.util.LinkedList$ListItr.next
+ 128  0.02% 98.75%       1 300185 bp.trawler.TrawlerStatistics.shuffleSequences
+ 129  0.02% 98.77%       1 300186 bp.trawler.TrawlerStatistics.replaceSequences
+ 130  0.02% 98.79%       1 300187 bp.trawler.TrawlerStatistics.replaceSequences
+ 131  0.02% 98.81%       1 300188 bp.trawler.TrawlerStatistics.replaceSequences
+ 132  0.02% 98.83%       1 300189 java.util.TreeSet.<init>
+ 133  0.02% 98.84%       1 300190 bp.trawler.Alphabet.translateString
+ 134  0.02% 98.86%       1 300191 bp.trawler.Alphabet.translateString
+ 135  0.02% 98.88%       1 300192 bp.trawler.Alphabet.translateString
+ 136  0.02% 98.90%       1 300193 bp.trawler.Alphabet.translateString
+ 137  0.02% 98.92%       1 300196 bp.trawler.Alphabet.translateString
+ 138  0.02% 98.94%       1 300197 bp.common.ds.SuffixTree.<init>
+ 139  0.02% 98.96%       1 300198 bp.common.ds.SuffixTree.isNode
+ 140  0.02% 98.98%       1 300199 bp.common.ds.SuffixTree.rescan
+ 141  0.02% 99.00%       1 300200 bp.common.ds.SuffixTree.getChild
+ 142  0.02% 99.01%       1 300201 bp.common.ds.SuffixTree.compare
+ 143  0.02% 99.03%       1 300207 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+ 144  0.02% 99.05%       1 300209 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+ 145  0.02% 99.07%       1 300210 bp.common.ds.SuffixTree.setSibling
+ 146  0.02% 99.09%       1 300212 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+ 147  0.02% 99.11%       1 300213 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+ 148  0.02% 99.13%       1 300214 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+ 149  0.02% 99.15%       1 300216 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+ 150  0.02% 99.17%       1 300217 bp.common.ds.SuffixTree.<init>
+ 151  0.02% 99.19%       1 300218 bp.common.ds.SuffixTree.<init>
+ 152  0.02% 99.20%       1 300220 bp.common.ds.SuffixTree.constructSmallNode
+ 153  0.02% 99.22%       1 300221 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+ 154  0.02% 99.24%       1 300230 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+ 155  0.02% 99.26%       1 300241 bp.common.ds.SuffixTree.constructLargeNode
+ 156  0.02% 99.28%       1 300242 bp.trawler.Trawler.runTrawler
+ 157  0.02% 99.30%       1 300244 bp.trawler.TrawlerTools.parseCounts
+ 158  0.02% 99.32%       1 300245 bp.trawler.Trawler.runTrawler
+ 159  0.02% 99.34%       1 300247 bp.trawler.TrawlerTools.parseCounts
+ 160  0.02% 99.36%       1 300248 bp.trawler.Trawler.runTrawler
+ 161  0.02% 99.37%       1 300250 bp.trawler.TrawlerTools.scan
+ 162  0.02% 99.39%       1 300251 bp.trawler.TrawlerTools.scan
+ 163  0.02% 99.41%       1 300254 bp.trawler.TrawlerTools.scan
+ 164  0.02% 99.43%       1 300255 bp.trawler.TrawlerStatistics$1.pro
+ 165  0.02% 99.45%       1 300256 bp.trawler.TrawlerTools.scan
+ 166  0.02% 99.47%       1 300259 java.util.TreeSet.size
+ 167  0.02% 99.49%       1 300264 bp.trawler.TrawlerStatistics$1.pro
+ 168  0.02% 99.51%       1 300265 bp.trawler.TrawlerStatistics$1.pro
+ 169  0.02% 99.53%       1 300268 bp.trawler.TrawlerTools.scan
+ 170  0.02% 99.55%       1 300269 bp.trawler.TrawlerTools.scan
+ 171  0.02% 99.56%       1 300272 bp.trawler.Alphabet.translateString
+ 172  0.02% 99.58%       1 300274 bp.trawler.Trawler.runTrawler
+ 173  0.02% 99.60%       1 300276 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+ 174  0.02% 99.62%       1 300277 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+ 175  0.02% 99.64%       1 300278 bp.common.ds.SuffixTree.looseMcCreightsAlgorithm
+ 176  0.02% 99.66%       1 300279 bp.common.ds.SuffixTree.<init>
+ 177  0.02% 99.68%       1 300280 bp.common.ds.SuffixTree.<init>
+ 178  0.02% 99.70%       1 300291 bp.trawler.TrawlerTools.scan
+ 179  0.02% 99.72%       1 300292 bp.trawler.TrawlerTools.scan
+ 180  0.02% 99.73%       1 300296 bp.trawler.TrawlerTools.scan
+ 181  0.02% 99.75%       1 300300 bp.trawler.TrawlerTools.scan
+ 182  0.02% 99.77%       1 300301 bp.trawler.TrawlerTools.scan
+ 183  0.02% 99.79%       1 300302 bp.trawler.TrawlerTools.scan
+ 184  0.02% 99.81%       1 300303 java.lang.Float.floatToRawIntBits
+ 185  0.02% 99.83%       1 300304 bp.trawler.Trawler.print
+ 186  0.02% 99.85%       1 300307 java.lang.System.arraycopy
+ 187  0.02% 99.87%       1 300309 java.io.PrintWriter.write
+ 188  0.02% 99.89%       1 300310 sun.misc.FloatingDecimal$BinaryToASCIIBuffer.dtoa
+ 189  0.02% 99.91%       1 300311 bp.trawler.Trawler.print
+ 190  0.02% 99.92%       1 300312 java.io.PrintWriter.write
+ 191  0.02% 99.94%       1 300313 java.io.PrintWriter.write
+ 192  0.02% 99.96%       1 300315 sun.misc.FloatingDecimal$BinaryToASCIIBuffer.dtoa
+ 193  0.02% 99.98%       1 300316 java.io.PrintWriter.write
+ 194  0.02% 100.00%       1 300318 java.io.FileOutputStream.close0
+CPU SAMPLES END
